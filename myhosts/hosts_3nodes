@@ -234,5 +234,11 @@ node3
 [mapr-kibana]
 node3
 
+# Kafka Ksql
+[mapr-kafka-ksql]
+node1
+node2
+node3
+
 
 

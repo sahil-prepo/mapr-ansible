@@ -1,0 +1,17 @@
+# Install MapR mapr-kafka-ksql, default interactive mode only
+- name: Install mapr-kafka-ksql
+  package: name=mapr-kafka-ksql state=present
+  register: mapr_kafka_ksql
+
+- name: get mapr-kafka-ksql version
+  yum:
+    list: mapr-kafka-ksql
+  register: package_name_version
+
+- name: set package version
+  set_fact:
+    package_name_version: "{{ package_name_version.results|selectattr('yumstate','equalto','installed')|map(attribute='version')|list|first }}"
+
+- name: start mapr kafka ksql
+  shell: "/opt/mapr/ksql/ksql-{{ package_name_version[:5] }}/bin/ksql-server-start /opt/mapr/ksql/ksql-{{ package_name_version[:5] }}/etc/ksql/ksqlserver.properties"
+  when: mapr_kafka_ksql.changed

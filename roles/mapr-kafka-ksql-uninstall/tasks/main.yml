@@ -1,0 +1,17 @@
+---
+# Uninstall MapR Kafka KSQL
+- name: get mapr-kafka-ksql version
+  yum:
+    list: mapr-kafka-ksql
+  register: package_name_version
+
+- name: set package version
+  set_fact:
+    package_name_version: "{{ package_name_version.results|selectattr('yumstate','equalto','installed')|map(attribute='version')|list|first }}"
+
+- name: stop mapr kafka ksql
+  shell: "/opt/mapr/ksql/ksql-{{ package_name_version[:5] }}/bin/ksql-server-stop /opt/mapr/ksql/ksql-{{ package_name_version[:5] }}/etc/ksql/ksqlserver.properties"
+
+- name: Uninstall mapr-kafka-ksql
+  package: name=mapr-kafka-ksql state=absent
+
